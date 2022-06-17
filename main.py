@@ -1,8 +1,9 @@
 import cv2 as cv
+import numpy as np
 
 
 def Resize(path, dim):
-    img = cv.imread(path, cv.IMREAD_COLOR)
+    img = cv.imread(path)
     img = cv.resize(img, dim, interpolation=cv.INTER_AREA)
     return img
 
@@ -14,22 +15,24 @@ def Show_Frame(label: str, frame):
     return frame
 
 
-def Find_contours(frame):
-    # img pre-processing
-    # frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    frame = cv.GaussianBlur(frame, (7, 7), 0)
-    ret, frame = cv.threshold(frame, 100, 255, cv.THRESH_BINARY)
-    cnts, hierarchy = cv.findContours(
-        image=frame, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_SIMPLE)
-    cnts = cv.drawContours(image=frame.copy(), contours=cnts, contourIdx=-1,
-                           color=(0, 255, 0), thickness=2, lineType=cv.LINE_AA)
-    return cnts
+def Hog_circle(frame):
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    # frame = cv.GaussianBlur(frame, (7, 7), 0)
+    circles = cv.HoughCircles(gray, cv.HOUGH_GRADIENT, 1.4, 100)
+    output = frame.copy()
+    if circles is not None:
+        circles = np.round(circles[0, :]).astype("int")
+        for (x, y, r) in circles:
+            cv.circle(output, (x, y), r, (255, 0, 0), 4)
+            cv.rectangle(output, (x-5, y-5), (x+5, y+5), (0, 128, 255), -1)
+    return output
 
 
 if __name__ == '__main__':
-    path = './dataset/1655358724571.jpeg'
+    # path = './dataset/cap.jpeg'
+    path = 'dataset/1655358792384.jpeg'
     dim = (640, 640)  # (width,height)
     frame = Resize(path, dim)
-    contours = Find_contours(frame)
-    Show_Frame('frame', contours)
+    contours = Hog_circle(frame)
+    # Show_Frame('image', frame)
+    Show_Frame('contours', contours)
