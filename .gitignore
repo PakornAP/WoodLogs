@@ -1,3 +1,2 @@
-# .venv
-# /my-venv
-# /.vscode
+.venv
+my-venv/
