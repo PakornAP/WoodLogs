@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from detection.find_contors import HSV_method, draw, Find_contours
 
 
 def Resize(path, dim):
@@ -10,29 +11,30 @@ def Resize(path, dim):
 
 def Show_Frame(label: str, frame):
     cv.imshow(label, frame)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-    return frame
+    if cv.waitKey(0) & 0xFF == ord('q'):
+        cv.destroyAllWindows()
 
 
 def Hog_circle(frame):
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    # frame = cv.GaussianBlur(frame, (7, 7), 0)
-    circles = cv.HoughCircles(gray, cv.HOUGH_GRADIENT, 1.4, 100)
+    gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
+    blur = cv.GaussianBlur(gray, (7, 7), 0)
+    circles = cv.HoughCircles(blur, cv.HOUGH_GRADIENT, 1.4, 100)
     output = frame.copy()
     if circles is not None:
         circles = np.round(circles[0, :]).astype("int")
         for (x, y, r) in circles:
-            cv.circle(output, (x, y), r, (255, 0, 0), 4)
-            cv.rectangle(output, (x-5, y-5), (x+5, y+5), (0, 128, 255), -1)
+            cv.circle(output, (x, y), r, (255, 0, 0), 2)
     return output
 
 
 if __name__ == '__main__':
     # path = './dataset/cap.jpeg'
-    path = 'dataset/1655358792384.jpeg'
+    path = r'dataset\1655358724571.jpeg'
     dim = (640, 640)  # (width,height)
     frame = Resize(path, dim)
-    contours = Hog_circle(frame)
+    # contours = Hog_circle(frame)
+    # print(Find_contours(frame))
+    # contours = draw(frame, Find_contours(frame))
+    contours = draw(frame, HSV_method(frame))
     # Show_Frame('image', frame)
     Show_Frame('contours', contours)
