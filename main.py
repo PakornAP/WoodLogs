@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from detection.find_contors import HSV_method, draw, Find_contours
+from detection.find_contors import HSV_method, draw, Find_contours, drawff
 
 
 def Resize(path, dim):
@@ -11,7 +11,7 @@ def Resize(path, dim):
 
 def Show_Frame(label: str, frame):
     cv.imshow(label, frame)
-    if cv.waitKey(0) & 0xFF == ord('q'):
+    if cv.waitKey(0) & 0xFF == ord("q"):
         cv.destroyAllWindows()
 
 
@@ -27,14 +27,14 @@ def Hog_circle(frame):
     return output
 
 
-if __name__ == '__main__':
-    # path = './dataset/cap.jpeg'
-    path = r'dataset\1655358724571.jpeg'
-    dim = (640, 640)  # (width,height)
+if __name__ == "__main__":
+    path = "./dataset/1.jpg"
+    # path = r"dataset\1655358724571.jpeg"
+    dim = (720, 720)  # (width,height)
     frame = Resize(path, dim)
     # contours = Hog_circle(frame)
-    # print(Find_contours(frame))
+    # contours = drawff(frame, (Find_contours(frame)))
     # contours = draw(frame, Find_contours(frame))
     contours = draw(frame, HSV_method(frame))
     # Show_Frame('image', frame)
-    Show_Frame('contours', contours)
+    Show_Frame("contours", contours)
