@@ -1,5 +1,5 @@
 # WoodLogs Step
-python -m venv my-venv
-activate your venv
-pip install -r requirements.txt
-(optional) python -m upgrade pip install
+python -m venv my-venv<br />
+activate your venv<br />
+pip install -r requirements.txt<br />
+(optional) python -m upgrade pip install<br />
